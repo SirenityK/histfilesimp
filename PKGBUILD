@@ -2,7 +2,8 @@ pkgname=histfilesimp
 pkgver=1.0.0
 arch=('x86_64')
 pkgrel=1
-makedepends=('cmake' 'glibc')
+depends=('glibc')
+makedepends=('cmake' 'make' 'gcc')
 
 build() {
 	cmake -B build -S .. \

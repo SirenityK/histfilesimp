@@ -1,4 +1,3 @@
-#include "main.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +5,22 @@
 
 #define BUF 1024
 #define HISTFILE "/.histfile"
-#define HISTFILE_BACK HISTFILE ".bak"
+#define BACKUP_EXT ".bak"
+#define HISTFILE_BACK HISTFILE BACKUP_EXT
+#define MAX_LEN 300
+#define MIN_LINES 100
+#define MAX_LINES 10000
+#define print_each(arr, size, format)                                          \
+  for (int i = 0; i < size; i++)                                               \
+  printf(format, arr[i])
+#define ERROR(...)                                                             \
+  fprintf(stderr, __VA_ARGS__);                                                \
+  exit(1)
+#define FOPEN(name, path, modes)                                               \
+  FILE *name = fopen(path, modes);                                             \
+  if (name == NULL) {                                                          \
+    ERROR("Failed to read file %s\n", path);                                   \
+  }
 
 unsigned int countlines(FILE *file) {
   char buf_data[BUF];
@@ -28,7 +42,7 @@ unsigned int countlines(FILE *file) {
   return counter;
 }
 
-int is_in(char strings[MAX_LINES][MAX_LEN], int str_size, char *match) {
+int contains(char strings[MAX_LINES][MAX_LEN], int str_size, char *match) {
   if (str_size == 0) {
     return -1;
   }
@@ -41,16 +55,26 @@ int is_in(char strings[MAX_LINES][MAX_LEN], int str_size, char *match) {
 }
 
 int main(int argc, char *argv[]) {
-  char *home_path = getenv("HOME");
-  size_t hpl = strlen(home_path);
   // allocate history file along with a backup
-  char *hpath = (char *)malloc(hpl + strlen(HISTFILE) + 1);
-  strcpy(hpath, home_path);
-  strcat(hpath, HISTFILE);
+  char *hpath;
+  char *bpath;
+  if (argc < 2) {
+    char *home_path = getenv("HOME");
+    size_t hpl = strlen(home_path);
+    hpath = (char *)malloc(hpl + strlen(HISTFILE) + 1);
+    strcpy(hpath, home_path);
+    strcat(hpath, HISTFILE);
 
-  char *bpath = (char *)malloc(hpl + strlen(HISTFILE_BACK) + 1);
-  strcpy(bpath, home_path);
-  strcat(bpath, HISTFILE_BACK);
+    bpath = (char *)malloc(hpl + strlen(HISTFILE_BACK) + 1);
+    strcpy(bpath, home_path);
+    strcat(bpath, HISTFILE_BACK);
+  } else {
+    hpath = malloc(strlen(argv[1]) + 1);
+    strcpy(hpath, argv[1]);
+    bpath = (char *)malloc(strlen(hpath) + strlen(BACKUP_EXT) + 1);
+    strcpy(bpath, hpath);
+    strcat(bpath, BACKUP_EXT);
+  }
 
   // open files and write
   FOPEN(fptr, hpath, "r");
@@ -74,7 +98,7 @@ int main(int argc, char *argv[]) {
   fseek(fptr, 0, SEEK_SET);
   int pos;
   while (fgets(text, MAX_LEN, fptr)) {
-    pos = is_in(unique, len, text);
+    pos = contains(unique, len, text);
     if (pos == -1) {
       strcpy(unique[len], text);
       len++;
@@ -87,9 +111,9 @@ int main(int argc, char *argv[]) {
     fputs(unique[i], file);
   }
   fclose(file);
-  free(hpath);
 
-  printf("History file optimized\n");
+  printf("File %s optimized\n", hpath);
+  free(hpath);
 
   return 0;
 }
