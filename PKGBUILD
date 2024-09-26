@@ -7,7 +7,7 @@ license=('MIT')
 depends=('glibc')
 makedepends=('cmake' 'make' 'gcc')
 source=(https://github.com/SirenityK/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz)
-sha256sums=(42d81cc17fdedab33b28ebf94de055ec2c5eb05e21da81c7cdc93002d9b6fed2)
+sha256sums=(3f43efaef100895c67f72b6da7da67476f2f86c2d5c194a0da33b3639b716fee)
 
 prepare() {
 	tar -xvf v${pkgver}.tar.gz
