@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(histfilesimp)
+project(histfilesimp C)
 
 if (WIN32)
     message(FATAL_ERROR "This project is not supported on Windows")
