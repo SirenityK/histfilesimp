@@ -4,6 +4,8 @@ version = "1.0.0"
 edition = "2021"
 description = "A script to reduce zsh history"
 license = "MIT"
+authors = ["SirenityK"]
+
 
 [[bin]]
 name = "histfilesimp"
@@ -14,3 +16,6 @@ strip = true
 opt-level = "z"
 lto = true
 panic = "abort"
+
+[package.metadata.deb]
+maintainer = "SirenityK"
