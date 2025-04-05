@@ -3,6 +3,7 @@ name = "histfilesimp"
 version = "1.0.0"
 edition = "2021"
 description = "A script to reduce zsh history"
+license = "MIT"
 
 [[bin]]
 name = "histfilesimp"
