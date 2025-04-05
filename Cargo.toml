@@ -1,0 +1,15 @@
+[package]
+name = "histfilesimp"
+version = "1.0.0"
+edition = "2021"
+description = "A script to reduce zsh history"
+
+[[bin]]
+name = "histfilesimp"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+panic = "abort"
